@@ -133,6 +133,7 @@
             <div class="labelLayout">
                 <label id="fileInfoLabel" hidden>檔案名稱:</label>
             </div>
+            <!--影像資訊-->
             <div class="labelLayout">
                 <label id="imageInfoLabel" hidden>影像:</label>
             </div>
@@ -290,10 +291,11 @@
                 fileInfoLabel.removeAttribute("hidden")
                 let imageInfoLabel = document.getElementById('imageInfoLabel')
                 imageInfoLabel.innerHTML = '影像:長' + height + '/寬' + width + 
-                                            '/張數' + depth + ' 位元數:' + byte
-                imageInfoLabel.removeAttribute("hidden")
-                console.log('影像:長' + height + '/寬' + width + '/張數' + depth + ' 位元數:' + byte)
-                
+                                            '/張數' + depth + ' 位元數:' + byte.substring(4) + 'bit'
+                imageInfoLabel.removeAttribute("hidden") 
+                console.log('影像:長' + height + '/寬' + width + '/張數' + 
+                            depth + ' 位元數:' + byte.substring(4) + 'bit')
+
             })
 
             // 模型資料下載
