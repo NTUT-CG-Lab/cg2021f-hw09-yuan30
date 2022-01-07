@@ -129,6 +129,13 @@
                 <label class="btnLabel" name="settingForm">save Model</label>
             </div>
 
+            <!--raw檔資訊-->
+            <div class="labelLayout">
+                <label id="fileInfoLabel" hidden>檔案名稱:</label>
+            </div>
+            <div class="labelLayout">
+                <label id="imageInfoLabel" hidden>影像:</label>
+            </div>
             <!--閥值-->
             <div class="labelLayout">
                 <label id="isovalueLabel" for="isovalueSlider">閥值:0/255</label>
@@ -139,10 +146,9 @@
             <div class="labelLayout">
                 <label>Texture:</label>
                 <select class="labelInput" name="settingForm">
-                    <option value=0 selected>option 1</option>
-                    <option value=1>option 2</option>
-                    <option value=2>option 3</option>
-                    <option value=3>option 4</option>
+                    <option value=0 selected>option 1 MeshPhong</option>
+                    <option value=1>option 2 MeshToon</option>
+                    <option value=2>option 3 MeshNormal</option>
                 </select>
             </div>
 
@@ -270,10 +276,6 @@
                         data = new Uint8Array(result)
                         paddingData = new Uint8Array(max * max * max)
 
-                        console.log(max);
-                        console.log(data);
-                        console.log(paddingData);
-
                         modelView.filename = filename[0]
                         modelView.databuffer = data
                         modelView.size = max
@@ -282,6 +284,16 @@
                     }
                 }
                 fr.readAsArrayBuffer(file)
+
+                let fileInfoLabel = document.getElementById('fileInfoLabel')
+                fileInfoLabel.innerHTML = '檔案名稱:' + filename[0]
+                fileInfoLabel.removeAttribute("hidden")
+                let imageInfoLabel = document.getElementById('imageInfoLabel')
+                imageInfoLabel.innerHTML = '影像:長' + height + '/寬' + width + 
+                                            '/張數' + depth + ' 位元數:' + byte
+                imageInfoLabel.removeAttribute("hidden")
+                console.log('影像:長' + height + '/寬' + width + '/張數' + depth + ' 位元數:' + byte)
+                
             })
 
             // 模型資料下載
@@ -301,7 +313,6 @@
                 let dlLink = document.createElement('a')
                 dlLink.href = URL.createObjectURL(blob)
                 dlLink.download = 'model.stl'
-                console.log('download')
                 dlLink.click()
 
             })

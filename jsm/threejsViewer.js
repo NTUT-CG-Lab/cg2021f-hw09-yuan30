@@ -91,16 +91,12 @@ class threejsViewer {
                 //如果是GPU就不需要加額外的 code ，如果不是就還要加
                 this.mesh = new MarchingCubes(this.size) 
                 this.mesh.name = 'mesh'
-
-                alert('filename='+ this.filename + 'size=' + this.size + ', isolation=' + this.threshold)
                 
                 if (this.textureOption == 0) {
                     this.mesh.material = new THREE.MeshPhongMaterial({ color: 0xff00f0 })
                 } else if (this.textureOption == 1) {
-                    this.mesh.material = new THREE.MeshPhongMaterial({ color: 0xff00f0 })
-                } else if (this.textureOption == 2) {
                     this.mesh.material = new THREE.MeshToonMaterial({ color: 0xff00f0 })
-                } else if (this.textureOption == 3) {
+                } else if (this.textureOption == 2) {
                     this.mesh.material = new THREE.MeshNormalMaterial({ color: 0xff00f0 })
                 }
 
@@ -116,10 +112,8 @@ class threejsViewer {
                 if (this.textureOption == 0) {
                     mesh.material = new THREE.MeshPhongMaterial({ color: 0xff00f0 })
                 } else if (this.textureOption == 1) {
-                    mesh.material = new THREE.MeshBasicMaterial({ color: 0xff00f0 })
-                } else if (this.textureOption == 2) {
                     mesh.material = new THREE.MeshToonMaterial({ color: 0xff00f0 })
-                } else if (this.textureOption == 3) {
+                } else if (this.textureOption == 2) {
                     mesh.material = new THREE.MeshNormalMaterial({ color: 0xff00f0 })
                 }
 
