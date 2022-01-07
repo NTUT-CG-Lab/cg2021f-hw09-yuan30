@@ -131,8 +131,8 @@
 
             <!--閥值-->
             <div class="labelLayout">
-                <label for="isovalueSlider">閥值:0/0</label>
-                <input class="labelInput" id="isovalueSlider" type="range" name="settingForm" min=0 max=1000>
+                <label id="isovalueLabel" for="isovalueSlider">閥值:0/255</label>
+                <input class="labelInput" id="isovalueSlider" type="range" name="settingForm" min=0 max=255>
             </div>
 
             <!--紋理-->
@@ -141,6 +141,8 @@
                 <select class="labelInput" name="settingForm">
                     <option value=0 selected>option 1</option>
                     <option value=1>option 2</option>
+                    <option value=2>option 3</option>
+                    <option value=3>option 4</option>
                 </select>
             </div>
 
@@ -159,7 +161,7 @@
     <script src="js/scoreoutputer.min.js"></script>
     <script>
         // 建構子 ScoreOutputer 接受一個字串，該字串為 csv 的檔案名稱
-        var so = new ScoreOutputer("109114514");
+        var so = new ScoreOutputer("110598009");
         so.installCSS(function () {
             // 安裝 bootstrap 的 css，如果在 html 上方引用 bootstrap 5.1.1 的話就不用使用 installCSS ，注意一定要 bootstrap css 5.1.1 版
             // installCSS 接收一個 callback 當作參數，作為成功安裝 bootstrap css 的回呼函式
@@ -172,9 +174,9 @@
             //addChild 要比 renderModal 先呼叫
             so.addChild("讀取文件並顯示資訊", 4, true);
             so.addChild("生成模型", 2, true);
-            so.addChild("閥值控制", 1, false);
-            so.addChild("文件下載", 1, false);
-            so.addChild("材質更換", 2, false);
+            so.addChild("閥值控制", 1, true);
+            so.addChild("文件下載", 1, true);
+            so.addChild("材質更換", 2, true);
 
             //產生自評表，參數如下所示
             so.renderModal(
@@ -265,10 +267,18 @@
                 fr.onload = () => {
                     let result = fr.result
                     if (byte == 'uint8') {
-                        //do something here
+                        data = new Uint8Array(result)
                         paddingData = new Uint8Array(max * max * max)
 
-                        modelView.loadData(paddingData, max, 75)
+                        console.log(max);
+                        console.log(data);
+                        console.log(paddingData);
+
+                        modelView.filename = filename[0]
+                        modelView.databuffer = data
+                        modelView.size = max
+                        modelView.threshold = 75
+                        modelView.updateModel()
                     }
                 }
                 fr.readAsArrayBuffer(file)
@@ -276,17 +286,42 @@
 
             // 模型資料下載
             elements[1].addEventListener('click', (evt) => {
+                let exporter = new STLExporter()
+                let mesh = modelView.download()
+
+                //用 binary 儲存，檔案比較小
+                let result = exporter.parse(mesh, { binary: true })
+                let blob = new Blob([result], {type:'application/octet-stream'})
+                
+                // or
+                // 用 ACSII 字串儲存，檔案大很多
+                // let result = exporter.parse(mesh, { binary: false })
+                // let blob = new Blob([result], {type:'text/plain'})
+
+                let dlLink = document.createElement('a')
+                dlLink.href = URL.createObjectURL(blob)
+                dlLink.download = 'model.stl'
+                console.log('download')
+                dlLink.click()
 
             })
 
             // 閥值設定
             elements[2].addEventListener('click', (evt) => {
-
+                let isovalue = evt.srcElement.value
+                modelView.threshold = isovalue
+                /*---implement---*/
+                let slider = document.getElementById('isovalueLabel')
+                slider.innerHTML = '閥值:' + isovalue +'/255'
+                modelView.updateModel()
             })
 
             // 紋理設置
             elements[3].addEventListener('change', (evt) => {
+                let selectedTextureIndex = evt.srcElement.value
 
+                modelView.textureOption = selectedTextureIndex
+                modelView.updateModel()
             })
 
             // 模型網格顯示
