@@ -10,7 +10,7 @@ class threejsViewer {
         this.threshold = 75
         this.enableLine = false
         this.filename = ''
-        this.mesh = new MarchingCubes(this.size)
+        this.mesh = null
 
         let width = domElement.clientWidth;
         let height = domElement.clientHeight;
@@ -71,16 +71,6 @@ class threejsViewer {
             this.camera.updateProjectionMatrix();
         })
 
-        //let mesh = null
-        /*this.loadData = () => {
-            mesh = new MarchingCubes(this.size)
-            mesh.material = new THREE.MeshPhongMaterial()
-            mesh.isolation = this.threshold
-            mesh.field = this.databuffer
-
-            this.scene.add(mesh)
-        }*/
-        
         this.updateModel = () => {
             // geometry + material => mesh
             let mesh = this.scene.getObjectByName('mesh')
@@ -91,6 +81,7 @@ class threejsViewer {
                 //如果是GPU就不需要加額外的 code ，如果不是就還要加
                 this.mesh = new MarchingCubes(this.size) 
                 this.mesh.name = 'mesh'
+
                 
                 if (this.textureOption == 0) {
                     this.mesh.material = new THREE.MeshPhongMaterial({ color: 0xff00f0 })
